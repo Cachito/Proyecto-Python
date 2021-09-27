@@ -3,13 +3,13 @@ from tkinter import *
 from tkinter.messagebox import *
 
 root = Tk()
-root.title("Mi aplicación")
+root.title("Menú Principal")
 
 menubar = Menu(root)
 
 # Elemento desplegable “Archivo”
 menuArchivo = Menu(menubar, tearoff=0)
-menuArchivo.add_command(label="Medios", command=abm_medios)
+menuArchivo.add_command(label="Medios", command = lambda: abm_medios(root))
 menuArchivo.add_command(label="Divisiones", command=abm_divisiones)
 menuArchivo.add_command(label="Noticias", command=cargador)
 menuArchivo.add_separator()
