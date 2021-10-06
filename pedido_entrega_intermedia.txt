@@ -1,0 +1,12 @@
+Pedido apra entrega intermedia
+
+1. una ventana
+2. dos secciones
+2.1 una seccion con los datos del registro
+2.2 una seccion con el resultado de la busqueda
+3. búsquedas por id
+4. una base 
+5. una tabla
+6. archivo de ejecución se llama main.py
+7. validar al menos un campo
+8. priorizar funcionamiento adecuado
