@@ -3,25 +3,23 @@ from tkinter import *
 from tkinter.messagebox import *
 
 root = Tk()
-root.title("Menú Principal")
 
-menubar = Menu(root)
+root.title("Carga de Noticias")
+root.iconbitmap("./imagenes/noticias.ico")
+root.resizable(False, False)
 
-# Elemento desplegable “Archivo”
-menuArchivo = Menu(menubar, tearoff=0)
-menuArchivo.add_command(label="Medios", command = lambda: abm_medios(root))
-menuArchivo.add_command(label="Divisiones", command=abm_divisiones)
-menuArchivo.add_command(label="Noticias", command=cargador)
-menuArchivo.add_separator()
-menuArchivo.add_command(label="Salir", command=root.quit)
-menubar.add_cascade(label="Archivo", menu=menuArchivo)
+width = 425
+height = 500
 
-# Elemento desplegable “Ayuda”
-menuAyuda = Menu(menubar, tearoff=0)
-menuAyuda.add_command(label="Acerca de..", command=about)
-menubar.add_cascade(label="Ayuda", menu=menuAyuda)
+screen_width = root.winfo_screenwidth()
+screen_height = root.winfo_screenheight()
 
-# Mostrar menú
-root.config(menu=menubar)
+x = (screen_width / 2) - (width / 2)
+y = (screen_height / 2) - (height / 2)
+
+set_frames(root)
+set_menu(root)
+
+root.geometry("%dx%d+%d+%d" % (width, height, x, y))
 
 root.mainloop()
