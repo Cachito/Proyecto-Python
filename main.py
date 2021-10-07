@@ -1,27 +1,74 @@
-from modulos.modulo import *
+#from modulos.modulo import *
 from tkinter import *
+from tkinter.ttk import *
 from tkinter.messagebox import *
 
-root = Tk()
-root.title("Menú Principal")
+class Noticias:
+    def __init__(self, parent=None, **configs):
+        # Defino parámetros
+        ancho_boton = 10
 
-menubar = Menu(root)
+        # Defino variables por defecto
+        self.fecha = StringVar()
+        self.medio = StringVar()
+        self.seccion = StringVar()
+        self.titulo = StringVar()
+        self.cuerpo = StringVar()
+        self.archivo = StringVar()
 
-# Elemento desplegable “Archivo”
-menuArchivo = Menu(menubar, tearoff=0)
-menuArchivo.add_command(label="Medios", command = lambda: abm_medios(root))
-menuArchivo.add_command(label="Divisiones", command=abm_divisiones)
-menuArchivo.add_command(label="Noticias", command=cargador)
-menuArchivo.add_separator()
-menuArchivo.add_command(label="Salir", command=root.quit)
-menubar.add_cascade(label="Archivo", menu=menuArchivo)
+        # Ventana principal
+        self.my_parent = parent
+        self.my_parent.geometry("800x600")
+        self.my_parent.title("Carga de Noticias")
+        self.my_parent.iconbitmap("./imagenes/noticias.ico")
 
-# Elemento desplegable “Ayuda”
-menuAyuda = Menu(menubar, tearoff=0)
-menuAyuda.add_command(label="Acerca de..", command=about)
-menubar.add_cascade(label="Ayuda", menu=menuAyuda)
+        # Contenedor
+        self.frm_contenedor = Frame(self.my_parent, borderwidth=1)
 
-# Mostrar menú
-root.config(menu=menubar)
+        # controles: guardar
+        self.frm_controles = Frame(master=self.frm_contenedor, height=40, borderwidth=1, relief=RAISED)
 
-root.mainloop()
+        self.img_nuevo = PhotoImage(file = r"./imagenes/iconNew.png")
+        self.btn_nuevo = Button(master=self.frm_controles, text="Nuevo", image = self.img_nuevo, width = 30, command = lambda: clear_data(self))
+        self.btn_nuevo.place(x=15, y=2)
+
+        self.img_guardar = PhotoImage(file = r"./imagenes/iconSave.png")
+        self.btn_guardar = Button(master=self.frm_controles, text="Guardar", image = self.img_guardar, width = 30, command = lambda: save_data(self.fecha.get()))
+        self.btn_guardar.place(x=50, y=2)
+
+        self.frm_controles.pack(side=TOP, expand=NO, fill=X) #place(x=5,y=400)
+
+        self.frm_datos = Frame(master=self.frm_contenedor, height=300, borderwidth=1, relief=SOLID)
+
+        self.lbl_fecha=Label(master=self.frm_datos, text="Fecha", width=50, anchor=W)
+        self.lbl_fecha.place(x=5, y=5)
+        #self.lbl_fecha.pack()
+        self.ent_fecha=Entry(master=self.frm_datos, textvariable=self.fecha, width=50)
+        self.ent_fecha.place(x=60, y=5)
+        #self.ent_fecha.pack()
+        self.frm_datos.pack(side=TOP, expand=NO, fill=X) #place(x=5,y=400)
+    
+        self.frm_contenedor.pack(expand=YES, fill=BOTH)
+
+        self.menu_bar = Menu(root)
+        self.menu_archivo = Menu(self.menu_bar, tearoff=0)
+        self.menu_archivo.add_separator()
+        self.menu_archivo.add_command(label="Acerca de..", command=about)
+        self.menu_archivo.add_command(label="Salir", command=root.quit)
+        self.menu_bar.add_cascade(label="Archivo", menu=self.menu_archivo)
+        
+        root.config(menu=self.menu_bar)
+
+def save_data(fecha):
+    print(f"Guardando fecha {fecha}")
+
+def clear_data(self):
+    self.fecha = ""
+
+def about():
+    showinfo("Entrega Intermedia", "Cargador de Noticias\n\nGrupo:\n- Luis Carro\n- Cristian Maier")
+
+if __name__ == "__main__":
+    root = Tk()
+    Noticias(root)
+    root.mainloop()
