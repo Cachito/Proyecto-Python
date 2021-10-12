@@ -1,4 +1,4 @@
-#from modulos.modulo import *
+from modulos.modulo import *
 from tkinter import *
 from tkinter.ttk import *
 from tkinter.messagebox import *
@@ -41,25 +41,48 @@ class Noticias:
         self.btn_nuevo.place(x=85, y=2)
 
         self.img_guardar = PhotoImage(file = r"./imagenes/iconSave.png")
-        self.btn_guardar = Button(master=self.frm_controles, text="Guardar", image=self.img_guardar, width=30, command=lambda: save_data(self.fecha.get()))
+        self.btn_guardar = Button(master=self.frm_controles, text="Guardar", image=self.img_guardar, width=30, command=lambda: save_data(self.ent_fecha.get(), self.ent_medio.get(), self.ent_seccion.get(), self.ent_titulo.get(), self.ent_cuerpo.get("1.0", END)))
         self.btn_guardar.place(x=120, y=2)
+
+        self.img_borrar = PhotoImage(file = r"./imagenes/iconDelete.png")
+        self.btn_borrar = Button(master=self.frm_controles, text="Eliminar", image=self.img_borrar, width=30, command=lambda: delete_data())
+        self.btn_borrar.place(x=155, y=2)
 
         self.img_buscar = PhotoImage(file = r"./imagenes/iconSearch.png")
         self.btn_buscar = Button(master=self.frm_controles, text="Buscar", image=self.img_buscar, width=30, command=lambda: buscar())
-        self.btn_buscar.place(x=155, y=2)        
-        
+        self.btn_buscar.place(x=190, y=2)
+
         self.frm_controles.pack(side=TOP, expand=NO, fill=X) #place(x=5,y=400)
 
         self.frm_datos = Frame(master=self.frm_contenedor, height=300, borderwidth=1, relief=SOLID)
 
         self.lbl_fecha=Label(master=self.frm_datos, text="Fecha", width=50, anchor=W)
         self.lbl_fecha.place(x=5, y=5)
-        #self.lbl_fecha.pack()
         self.ent_fecha=Entry(master=self.frm_datos, textvariable=self.fecha, width=50)
         self.ent_fecha.place(x=60, y=5)
-        #self.ent_fecha.pack()
+
+        self.lbl_medio=Label(master=self.frm_datos, text="Medio", width=50, anchor=W)
+        self.lbl_medio.place(x=5, y=35)
+        self.ent_medio=Entry(master=self.frm_datos, textvariable=self.medio, width=50)
+        self.ent_medio.place(x=60, y=35)
+
+        self.lbl_seccion=Label(master=self.frm_datos, text="Sección", width=50, anchor=W)
+        self.lbl_seccion.place(x=5, y=65)
+        self.ent_seccion=Entry(master=self.frm_datos, textvariable=self.seccion, width=50)
+        self.ent_seccion.place(x=60, y=65)
+
+        self.lbl_titulo=Label(master=self.frm_datos, text="Título", width=50, anchor=W)
+        self.lbl_titulo.place(x=5, y=95)
+        self.ent_titulo=Entry(master=self.frm_datos, textvariable=self.titulo, width=50)
+        self.ent_titulo.place(x=60, y=95)
+
+        self.lbl_cuerpo=Label(master=self.frm_datos, text="Cuerpo", width=50, anchor=W)
+        self.lbl_cuerpo.place(x=5, y=125)
+        self.ent_cuerpo=Text(master=self.frm_datos, width=50, height=10)
+        self.ent_cuerpo.place(x=60, y=125)
+
         self.frm_datos.pack(side=TOP, expand=NO, fill=X) #place(x=5,y=400)
-    
+
         self.frm_contenedor.pack(expand=YES, fill=BOTH)
 
         self.menu_bar = Menu(root)
@@ -68,26 +91,8 @@ class Noticias:
         self.menu_archivo.add_command(label="Acerca de..", command=about)
         self.menu_archivo.add_command(label="Salir", command=root.quit)
         self.menu_bar.add_cascade(label="Archivo", menu=self.menu_archivo)
-        
+
         root.config(menu=self.menu_bar)
-
-def save_data(fecha):
-    print(f"Guardando fecha {fecha}")
-
-def create_data():
-    print(f"Creando Base de Datos")    
-
-def create_table():
-    print(f"Creando Tabla")        
-
-def clear_data(self):
-    self.fecha = ""
-
-def buscar():
-    print(f"buscando")        
-
-def about():
-    showinfo("Entrega Intermedia", "Cargador de Noticias\n\nGrupo:\n- Luis Carro\n- Cristian Maier")
 
 if __name__ == "__main__":
     root = Tk()

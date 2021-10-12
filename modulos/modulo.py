@@ -1,99 +1,150 @@
 import tkinter
+import mysql.connector
+import sys
+import re
+import datetime
 from tkinter import *
 from tkinter.messagebox import *
 
-def set_frames(root):
-    var_fecha = StringVar()
-    var_medio = StringVar()
-    var_seccion = StringVar()
-    var_titulo = StringVar()
-    #var_cuerpo = StringVar()
-    var_imagen = StringVar()
+def create_data():
+    db_cacho = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        passwd=""
+    )
 
-    frame_data = Frame(master=root, width=500, height=600, borderwidth=1, relief=SOLID)
-    frame_data.place(x=5,y=5)
-    
-    lbl_fecha=Label(master=frame_data, text="Fecha", width=50, anchor=W)
-    lbl_fecha.place(x=5, y=5)
-    lbl_fecha.pack()
-    ent_fecha=Entry(master=frame_data, textvariable=var_fecha, width=50)
-    ent_fecha.place(x=60, y=5)
-    ent_fecha.pack()
+    try:
+        csr_cacho = db_cacho.cursor()
 
-    lbl_medio=Label(master=frame_data, text="Medio", width=50, anchor=W)
-    lbl_medio.place(x=5, y=35)
-    lbl_medio.pack()
-    ent_medio=Entry(master=frame_data, textvariable=var_medio, width=50)
-    ent_medio.place(x=60, y=35)    
-    ent_medio.pack()
+        sql_drop = "DROP DATABASE IF EXISTS carro_maier"
+        sql_create = "CREATE DATABASE carro_maier"
 
-    lbl_seccion=Label(master=frame_data, text="Sección", width=50, anchor=W)
-    lbl_seccion.place(x=5, y=65)
-    lbl_seccion.pack()
-    ent_seccion=Entry(master=frame_data, textvariable=var_seccion, width=50)
-    ent_seccion.place(x=60, y=65)    
-    ent_seccion.pack()
+        csr_cacho.execute(sql_drop)
+        csr_cacho.execute(sql_create)
 
-    lbl_titulo=Label(master=frame_data, text="Título", width=50, anchor=W)
-    lbl_titulo.place(x=5, y=95)
-    lbl_titulo.pack()
-    ent_titulo=Entry(master=frame_data, textvariable=var_titulo, width=50)
-    ent_titulo.place(x=60, y=95)    
-    ent_titulo.pack()
+        db_cacho.commit()
+        db_cacho.close()
+        showinfo("Carro-Maier", "Base de datos carro_meier creada con éxto")
 
-    lbl_cuerpo=Label(master=frame_data, text="Cuerpo", width=50, anchor=W)
-    lbl_cuerpo.place(x=5, y=125)
-    lbl_cuerpo.place(x=60, y=125)
-    lbl_cuerpo.pack()
-    txt_cuerpo=Text(master=frame_data, width=40, height=4)
-    txt_cuerpo.pack()
+    except:
+        db_cacho.rollback()
+        db_cacho.close()
+        showinfo("Carro-Meier", f"error al crear base de datos: {sys.exc_info()[0]}")
 
-    lbl_imagen=Label(master=frame_data, text="Imagen", width=50, anchor=W)
-    lbl_imagen.place(x=5, y=205)
-    lbl_imagen.pack()
-    ent_imagen=Entry(master=frame_data, textvariable=var_imagen, width=50)
-    ent_imagen.place(x=60, y=205)    
-    ent_imagen.pack()
+def create_table():
+    try:
+        db_cacho = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            passwd="",
+            database="carro_maier"
+        )
+        try:
+            csr_cacho = db_cacho.cursor()
 
-    #frame_list = Frame(master=root, width=400, height=150, bg="yellow")
+            sql_drop = "DROP TABLE IF EXISTS `Noticias`"
+            sql_create = """
+                CREATE TABLE `Noticias`(
+                    Id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                    Fecha DATE,
+                    Medio VARCHAR(128) COLLATE utf8_spanish2_ci NOT NULL,
+                    Seccion VARCHAR(128) COLLATE utf8_spanish2_ci NOT NULL,
+                    Titulo VARCHAR(128) COLLATE utf8_spanish2_ci NOT NULL,
+                    Cuerpo TEXT COLLATE utf8_spanish2_ci NOT NULL
+                    )
+                """
+            csr_cacho.execute(sql_drop)
+            csr_cacho.execute(sql_create)
+            db_cacho.commit()
+            db_cacho.close()
+            showinfo("Carro-Meier", "Tabla `Noticias` creada con éxito")
 
-    frame_control = Frame(master=root, width=400, height=50, bg="blue")
-    frame_control.place(x=5,y=600)
+        except Exception as e:
+            db_cacho.rollback()
+            db_cacho.close()
+            showinfo("Carro-Meier", f"error al crear tabla `Noticias`: {str(e)}")
 
-    btn_save = Button(master=frame_control, text="Guardar", command = lambda: save_data(ent_fecha.get(), ent_medio.get(), ent_seccion.get(), ent_titulo.get(), txt_cuerpo.get("1.0", END), ent_imagen.get()))
-    btn_save.place(x=15, y=5)
+    except Exception as e:
+        showinfo("Carro-Meier", f"error al abrir base de datos carro_maier: {str(e)}")
 
-    btn_get = Button(master=frame_control, text="Limpiar", command = lambda: get_data())
-    btn_get.place(x=100, y=5)
-    
-    btn_save.pack()
-    btn_get.pack()
+def clear_data(self):
+    self.fecha = ""
+    self.medio = ""
+    self.seccion = ""
+    self.titulo = ""
+    self.cuerpo = ""
+    self.archivo = ""
+    self.ent_cuerpo.delete("1.0", END)
 
-    frame_data.pack()
-    #frame_list.pack()
-    frame_control.pack()
+def save_data(fecha, medio, seccion, titulo, cuerpo):
+    if not valida(fecha, medio, seccion, titulo, cuerpo):
+        return
 
-def set_menu(root):
-    menubar = Menu(root)
+    try:
+        db_cacho = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            passwd="",
+            database="carro_maier"
+        )
 
-    # Elemento desplegable “Archivo”
-    menuArchivo = Menu(menubar, tearoff=0)
-    menuArchivo.add_separator()
-    menuArchivo.add_command(label="Acerca de..", command=about)
-    menuArchivo.add_command(label="Salir", command=root.quit)
-    menubar.add_cascade(label="Archivo", menu=menuArchivo)
+        try:
+            csr_cacho = db_cacho.cursor()
 
-    # Mostrar menú
-    root.config(menu=menubar)
+            sql_insert = """
+                INSERT INTO Noticias (Fecha, Medio, Seccion, Titulo, Cuerpo)
+                    VALUES (%s, %s, %s, %s, %s)
+            """
+            datos = (fecha, medio, seccion, titulo, cuerpo)
 
-def save_data(fecha, medio, seccion, titulo, cuerpo, imagen):
-    print(f"Guardando fecha {fecha}, medio {medio}, seccion {seccion}, titulo {titulo}, cuerpo {cuerpo}, imagen {imagen}")
+            csr_cacho.execute(sql_insert, datos)
 
-def get_data():
-        print("geteando")
+            db_cacho.commit()
+            db_cacho.close()
+            showinfo("Carro-Meier", "registro insertado con éxito")
+
+        except Exception as e:
+            db_cacho.rollback()
+            db_cacho.close()
+            showinfo("Carro-Meier", f"error al insertar registro en tabla Noticias: {str(e)}")
+
+    except Exception as e:
+        showinfo("Carro-Meier", f"error al abrir base de datos carro_maier: {str(e)}")
+
+def valida(fecha, medio, seccion, titulo, cuerpo):
+    msj_error = ""
+
+    if not fecha:
+        msj_error = " fecha "
+    else:
+        try:
+            datetime.datetime.strptime(fecha, '%Y/%m/%d')
+        except ValueError:
+            msj_error = " el formato de la fecha debe ser YYYY/MM/dd"
+
+    if not medio:
+        msj_error = f"{msj_error} medio "
+
+    if not seccion:
+        msj_error = f"{msj_error} seccion "
+
+    if not titulo:
+        msj_error = f"{msj_error} título "
+
+    if not cuerpo:
+        msj_error = f"{msj_error} cuerpo "
+
+    if msj_error:
+        showinfo("Carro-Meier", f"debe ingresar: {msj_error}")
+        return False
+    else:
+        return True
+
+def delete_data():
+    print(f"Borrando")
+
+def buscar():
+    print(f"Buscando")
 
 def about():
     showinfo("Entrega Intermedia", "Cargador de Noticias\n\nGrupo:\n- Luis Carro\n- Cristian Maier")
-
-def hola():
-    print("Hola!")
