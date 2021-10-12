@@ -67,6 +67,38 @@ def create_table():
     except Exception as e:
         showinfo("Carro-Meier", f"error al abrir base de datos carro_maier: {str(e)}")
 
+def refresh(self):
+    # limpieza de tabla
+    records = self.tree.get_children()
+    for element in records:
+        self.tree.delete(element)
+
+    try:
+        db_cacho = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            passwd="",
+            database="carro_maier"
+        )
+
+        try:
+            csr_cacho = db_cacho.cursor()
+            sql_get = "SELECT * FROM Noticias ORDER BY Fecha DESC"
+
+            csr_cacho.execute(sql_get)
+            resultado = csr_cacho.fetchall()
+
+            for fila in resultado:
+                self.tree.insert('', 0, text = fila[0], values = (fila[1],fila[2],fila[3],fila[4]))
+
+        except Exception as e:
+            db_cacho.rollback()
+            db_cacho.close()
+            showinfo("Carro-Meier", f"error al leer registros en tabla Noticias: {str(e)}")
+
+    except Exception as e:
+        showinfo("Carro-Meier", f"error al abrir base de datos carro_maier: {str(e)}")
+
 def clear_data(self):
     self.fecha = ""
     self.medio = ""
@@ -76,7 +108,7 @@ def clear_data(self):
     self.archivo = ""
     self.ent_cuerpo.delete("1.0", END)
 
-def save_data(fecha, medio, seccion, titulo, cuerpo):
+def save_data(fecha, medio, seccion, titulo, cuerpo, self):
     if not valida(fecha, medio, seccion, titulo, cuerpo):
         return
 
@@ -102,6 +134,7 @@ def save_data(fecha, medio, seccion, titulo, cuerpo):
             db_cacho.commit()
             db_cacho.close()
             showinfo("Carro-Meier", "registro insertado con éxito")
+            clear_data(self)
 
         except Exception as e:
             db_cacho.rollback()
@@ -141,10 +174,10 @@ def valida(fecha, medio, seccion, titulo, cuerpo):
         return True
 
 def delete_data():
-    print(f"Borrando")
+    print("Borrando")
 
 def buscar():
-    print(f"Buscando")
+    print("Buscando")
 
 def about():
     showinfo("Entrega Intermedia", "Cargador de Noticias\n\nGrupo:\n- Luis Carro\n- Cristian Maier")
