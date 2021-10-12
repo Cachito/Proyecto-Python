@@ -1,4 +1,4 @@
-#from modulos.modulo import *
+from modulos.modulo import *
 from tkinter import *
 from tkinter.ttk import *
 from tkinter.messagebox import *
@@ -41,7 +41,7 @@ class Noticias:
         self.btn_nuevo.place(x=85, y=2)
 
         self.img_guardar = PhotoImage(file = r"./imagenes/iconSave.png")
-        self.btn_guardar = Button(master=self.frm_controles, text="Guardar", image=self.img_guardar, width=30, command=lambda: save_data(self.ent_fecha.get(), self.ent_medio.get()))
+        self.btn_guardar = Button(master=self.frm_controles, text="Guardar", image=self.img_guardar, width=30, command=lambda: save_data(self.ent_fecha.get(), self.ent_medio.get(), self.ent_seccion.get(), self.ent_titulo.get(), self.ent_cuerpo.get("1.0", END)))
         self.btn_guardar.place(x=120, y=2)
 
         self.img_borrar = PhotoImage(file = r"./imagenes/iconDelete.png")
@@ -64,22 +64,22 @@ class Noticias:
         self.lbl_medio=Label(master=self.frm_datos, text="Medio", width=50, anchor=W)
         self.lbl_medio.place(x=5, y=35)
         self.ent_medio=Entry(master=self.frm_datos, textvariable=self.medio, width=50)
-        self.ent_medio.place(x=60, y=35)        
+        self.ent_medio.place(x=60, y=35)
 
         self.lbl_seccion=Label(master=self.frm_datos, text="Sección", width=50, anchor=W)
         self.lbl_seccion.place(x=5, y=65)
         self.ent_seccion=Entry(master=self.frm_datos, textvariable=self.seccion, width=50)
-        self.ent_seccion.place(x=60, y=65)        
+        self.ent_seccion.place(x=60, y=65)
 
         self.lbl_titulo=Label(master=self.frm_datos, text="Título", width=50, anchor=W)
         self.lbl_titulo.place(x=5, y=95)
         self.ent_titulo=Entry(master=self.frm_datos, textvariable=self.titulo, width=50)
-        self.ent_titulo.place(x=60, y=95)        
+        self.ent_titulo.place(x=60, y=95)
 
         self.lbl_cuerpo=Label(master=self.frm_datos, text="Cuerpo", width=50, anchor=W)
         self.lbl_cuerpo.place(x=5, y=125)
-        self.ent_cuerpo=Entry(master=self.frm_datos, textvariable=self.cuerpo, width=50)
-        self.ent_cuerpo.place(x=60, y=125)        
+        self.ent_cuerpo=Text(master=self.frm_datos, width=50, height=10)
+        self.ent_cuerpo.place(x=60, y=125)
 
         self.frm_datos.pack(side=TOP, expand=NO, fill=X) #place(x=5,y=400)
 
@@ -91,34 +91,8 @@ class Noticias:
         self.menu_archivo.add_command(label="Acerca de..", command=about)
         self.menu_archivo.add_command(label="Salir", command=root.quit)
         self.menu_bar.add_cascade(label="Archivo", menu=self.menu_archivo)
-       
+
         root.config(menu=self.menu_bar)
-
-def save_data(fecha, medio):
-    print(f"Guardando fecha {fecha}; medio {medio}")
-
-def create_data():
-    print(f"Creando Base de Datos")    
-
-def create_table():
-    print(f"Creando Tabla")        
-
-def clear_data(self):
-    self.fecha = ""
-    self.medio = ""
-    self.seccion = ""
-    self.titulo = ""
-    self.cuerpo = ""
-    self.archivo = ""
-
-def delete_data():
-    print(f"Borrando")            
-
-def buscar():
-    print(f"Buscando")        
-
-def about():
-    showinfo("Entrega Intermedia", "Cargador de Noticias\n\nGrupo:\n- Luis Carro\n- Cristian Maier")
 
 if __name__ == "__main__":
     root = Tk()
