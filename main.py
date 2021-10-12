@@ -41,13 +41,13 @@ class Noticias:
         self.btn_nuevo.place(x=85, y=2)
 
         self.img_guardar = PhotoImage(file = r"./imagenes/iconSave.png")
-        self.btn_guardar = Button(master=self.frm_controles, text="Guardar", image=self.img_guardar, width=30, command=lambda: save_data(self.fecha.get()))
+        self.btn_guardar = Button(master=self.frm_controles, text="Guardar", image=self.img_guardar, width=30, command=lambda: save_data(self.ent_fecha.get()))
         self.btn_guardar.place(x=120, y=2)
 
         self.img_buscar = PhotoImage(file = r"./imagenes/iconSearch.png")
         self.btn_buscar = Button(master=self.frm_controles, text="Buscar", image=self.img_buscar, width=30, command=lambda: buscar())
-        self.btn_buscar.place(x=155, y=2)        
-        
+        self.btn_buscar.place(x=155, y=2)
+
         self.frm_controles.pack(side=TOP, expand=NO, fill=X) #place(x=5,y=400)
 
         self.frm_datos = Frame(master=self.frm_contenedor, height=300, borderwidth=1, relief=SOLID)
@@ -55,11 +55,13 @@ class Noticias:
         self.lbl_fecha=Label(master=self.frm_datos, text="Fecha", width=50, anchor=W)
         self.lbl_fecha.place(x=5, y=5)
         #self.lbl_fecha.pack()
+
         self.ent_fecha=Entry(master=self.frm_datos, textvariable=self.fecha, width=50)
         self.ent_fecha.place(x=60, y=5)
         #self.ent_fecha.pack()
+
         self.frm_datos.pack(side=TOP, expand=NO, fill=X) #place(x=5,y=400)
-    
+
         self.frm_contenedor.pack(expand=YES, fill=BOTH)
 
         self.menu_bar = Menu(root)
