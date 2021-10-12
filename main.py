@@ -18,12 +18,12 @@ class Noticias:
 
         # Ventana principal
         self.my_parent = parent
-        self.my_parent.geometry("800x600")
+        self.my_parent.geometry("500x600")
         self.my_parent.title("Carga de Noticias")
         self.my_parent.iconbitmap("./imagenes/noticias.ico")
 
         # Contenedor
-        self.frm_contenedor = Frame(self.my_parent, borderwidth=1)
+        self.frm_contenedor = Frame(self.my_parent, height=600, borderwidth=1)
 
         # controles: guardar
         self.frm_controles = Frame(master=self.frm_contenedor, height=40, borderwidth=1, relief=RAISED)
@@ -41,16 +41,20 @@ class Noticias:
         self.btn_nuevo.place(x=85, y=2)
 
         self.img_guardar = PhotoImage(file = r"./imagenes/iconSave.png")
-        self.btn_guardar = Button(master=self.frm_controles, text="Guardar", image=self.img_guardar, width=30, command=lambda: save_data(self.ent_fecha.get(), self.ent_medio.get(), self.ent_seccion.get(), self.ent_titulo.get(), self.ent_cuerpo.get("1.0", END)))
+        self.btn_guardar = Button(master=self.frm_controles, text="Guardar", image=self.img_guardar, width=30, command=lambda: save_data(self.ent_fecha.get(), self.ent_medio.get(), self.ent_seccion.get(), self.ent_titulo.get(), self.ent_cuerpo.get("1.0", END), self))
         self.btn_guardar.place(x=120, y=2)
 
         self.img_borrar = PhotoImage(file = r"./imagenes/iconDelete.png")
         self.btn_borrar = Button(master=self.frm_controles, text="Eliminar", image=self.img_borrar, width=30, command=lambda: delete_data())
         self.btn_borrar.place(x=155, y=2)
 
+        self.img_refresh = PhotoImage(file = r"./imagenes/iconRefresh.png")
+        self.btn_refresh = Button(master=self.frm_controles, text="Actualizar", image=self.img_refresh, width=30, command=lambda: refresh(self))
+        self.btn_refresh.place(x=190, y=2)
+
         self.img_buscar = PhotoImage(file = r"./imagenes/iconSearch.png")
         self.btn_buscar = Button(master=self.frm_controles, text="Buscar", image=self.img_buscar, width=30, command=lambda: buscar())
-        self.btn_buscar.place(x=190, y=2)
+        self.btn_buscar.place(x=225, y=2)
 
         self.frm_controles.pack(side=TOP, expand=NO, fill=X) #place(x=5,y=400)
 
@@ -82,6 +86,24 @@ class Noticias:
         self.ent_cuerpo.place(x=60, y=125)
 
         self.frm_datos.pack(side=TOP, expand=NO, fill=X) #place(x=5,y=400)
+
+        self.frm_grilla = Frame(master=self.frm_contenedor, height=100, borderwidth=1, relief=RAISED)
+
+        self.tree = Treeview(master=self.frm_grilla)
+        self.tree["columns"] = ("Fecha", "Medio", "Seccion", "Titulo")
+        self.tree.column("#0", width=50, minwidth=50, anchor=W)
+        self.tree.column("Fecha", width=80, minwidth=80)
+        self.tree.column("Medio", width=80, minwidth=80)
+        self.tree.column("Seccion", width=80, minwidth=80)
+        self.tree.column("Titulo", width=100, minwidth=100)
+        self.tree.heading('#0', text='', anchor=CENTER)
+        self.tree.heading('Fecha', text='Fecha', anchor=CENTER)
+        self.tree.heading('Medio', text='Medio', anchor=CENTER)
+        self.tree.heading('Seccion', text='Sección', anchor=CENTER)
+        self.tree.heading('Titulo', text='Título', anchor=CENTER)
+        self.tree.place(x=5, y=5)
+
+        self.frm_grilla.pack(side=TOP, expand=YES, fill=BOTH) #place(x=5,y=400)
 
         self.frm_contenedor.pack(expand=YES, fill=BOTH)
 
