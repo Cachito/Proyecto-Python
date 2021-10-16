@@ -68,6 +68,10 @@ def create_table():
         showinfo("Carro-Maier", f"error al abrir base de datos carro_maier: {str(e)}")
 
 def get_datos(search_id, self):
+    if not search_id:
+        showinfo("Carro-Maier", f"Debe seleccionar algo")
+        return
+        
     try:
         db_cacho = mysql.connector.connect(
             host="localhost",
