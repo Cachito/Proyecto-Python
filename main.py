@@ -5,16 +5,15 @@ from tkinter.messagebox import *
 
 class Noticias:
     def __init__(self, parent=None, **configs):
-        # Defino parámetros
-        ancho_boton = 10
-
         # Defino variables por defecto
+        self.id = StringVar()
         self.fecha = StringVar()
         self.medio = StringVar()
         self.seccion = StringVar()
         self.titulo = StringVar()
         self.cuerpo = StringVar()
-        self.archivo = StringVar()
+        #self.archivo = StringVar()
+        self.busqueda = StringVar()
 
         # Ventana principal
         self.my_parent = parent
@@ -41,20 +40,23 @@ class Noticias:
         self.btn_nuevo.place(x=85, y=2)
 
         self.img_guardar = PhotoImage(file = r"./imagenes/iconSave.png")
-        self.btn_guardar = Button(master=self.frm_controles, text="Guardar", image=self.img_guardar, width=30, command=lambda: save_data(self.ent_fecha.get(), self.ent_medio.get(), self.ent_seccion.get(), self.ent_titulo.get(), self.ent_cuerpo.get("1.0", END), self))
+        self.btn_guardar = Button(master=self.frm_controles, text="Guardar", image=self.img_guardar, width=30, command=lambda: save_data(self.id, self.ent_fecha.get(), self.ent_medio.get(), self.ent_seccion.get(), self.ent_titulo.get(), self.ent_cuerpo.get("1.0", END), self))
         self.btn_guardar.place(x=120, y=2)
 
         self.img_borrar = PhotoImage(file = r"./imagenes/iconDelete.png")
-        self.btn_borrar = Button(master=self.frm_controles, text="Eliminar", image=self.img_borrar, width=30, command=lambda: delete_data())
+        self.btn_borrar = Button(master=self.frm_controles, text="Eliminar", image=self.img_borrar, width=30, command=lambda: delete_data(self))
         self.btn_borrar.place(x=155, y=2)
 
         self.img_refresh = PhotoImage(file = r"./imagenes/iconRefresh.png")
         self.btn_refresh = Button(master=self.frm_controles, text="Actualizar", image=self.img_refresh, width=30, command=lambda: refresh(self))
         self.btn_refresh.place(x=190, y=2)
 
+        self.ent_busqueda = Entry(master=self.frm_controles, textvariable=self.busqueda, width=3)
+        self.ent_busqueda.place(x=235, y=7)
+
         self.img_buscar = PhotoImage(file = r"./imagenes/iconSearch.png")
-        self.btn_buscar = Button(master=self.frm_controles, text="Buscar", image=self.img_buscar, width=30, command=lambda: buscar())
-        self.btn_buscar.place(x=225, y=2)
+        self.btn_buscar = Button(master=self.frm_controles, text="Buscar", image=self.img_buscar, width=30, command=lambda: buscar(self.ent_busqueda.get(), self))
+        self.btn_buscar.place(x=260, y=2)
 
         self.frm_controles.pack(side=TOP, expand=NO, fill=X) #place(x=5,y=400)
 
@@ -102,6 +104,7 @@ class Noticias:
         self.tree.heading('Seccion', text='Sección', anchor=CENTER)
         self.tree.heading('Titulo', text='Título', anchor=CENTER)
         self.tree.place(x=5, y=5)
+        self.tree.bind("<Double-1>", self.on_double_click)
 
         self.frm_grilla.pack(side=TOP, expand=YES, fill=BOTH) #place(x=5,y=400)
 
@@ -115,6 +118,12 @@ class Noticias:
         self.menu_bar.add_cascade(label="Archivo", menu=self.menu_archivo)
 
         root.config(menu=self.menu_bar)
+
+        clear_data(self)
+
+    def on_double_click(self, event):
+        cur_item = self.tree.item(self.tree.focus())
+        get_datos(cur_item["text"], self)
 
 if __name__ == "__main__":
     root = Tk()
