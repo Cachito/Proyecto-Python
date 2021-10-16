@@ -311,4 +311,4 @@ def buscar(search_id, self):
     get_datos(search_id, self)
 
 def about():
-    showinfo("Entrega Intermedia", "Cargador de Noticias\n\nGrupo:\n- Luis Carro\n- Cristian Maier")
+    showinfo("Entrega Final", "Cargador de Noticias\n\nGrupo:\n- Luis Carro\n- Cristian Maier")
