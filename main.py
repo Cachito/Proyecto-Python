@@ -1,7 +1,8 @@
-from modulos.modulo import *
+
 from tkinter import *
 from tkinter.ttk import *
 from tkinter.messagebox import *
+from modulos.modulo import *
 
 class Noticias:
     def __init__(self, parent=None, **configs):
